@@ -1,11 +1,12 @@
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
-const heading = document.querySelector("h1");
+const heading = document.getElementById("heading");
+const dramaticSound = document.getElementById("dramaticSound");
+const laughSound = document.getElementById("laughSound");
 
 let isFloating = false;
 let clickCount = 0;
 
-// Messages that appear when No is clicked
 const messages = [
     "really?",
     "are you sure?",
@@ -19,8 +20,16 @@ const messages = [
     "just click yes already ❤️"
 ];
 
+// Keep text spaced above growing button
+function updateSpacing() {
+    const yesScale = 1 + clickCount * 0.25;
+    const extraSpace = yesScale * 20;
+    heading.style.marginBottom = 30 + extraSpace + "px";
+}
+
 // Smooth avoidance
 document.addEventListener("mousemove", (e) => {
+    if (!noBtn || !noBtn.isConnected) return;
 
     const rect = noBtn.getBoundingClientRect();
     const btnCenterX = rect.left + rect.width / 2;
@@ -57,64 +66,96 @@ document.addEventListener("mousemove", (e) => {
     }
 });
 
-// TELEPORT if mouse touches it
+// Teleport on hover
 noBtn.addEventListener("mouseenter", () => {
     const rect = noBtn.getBoundingClientRect();
-
     const maxX = window.innerWidth - rect.width;
     const maxY = window.innerHeight - rect.height;
 
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
-
     noBtn.style.position = "fixed";
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
 
     isFloating = true;
 });
 
-// If No gets clicked somehow
+// No button click escalation
 noBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
     if (clickCount < messages.length) {
         heading.textContent = messages[clickCount];
-    } else {
-        heading.textContent = "you’re just being difficult now 😭";
     }
 
     clickCount++;
 
-    // Grow Yes button
-    let yesScale = 1 + clickCount * 0.2;
+    // Grow Yes
+    let yesScale = 1 + clickCount * 0.25;
     yesBtn.style.transform = `scale(${yesScale})`;
 
-    // Shrink No button
+    // Shrink No
     let noScale = 1 - clickCount * 0.1;
-    if (noScale < 0.2) noScale = 0.2;
+    if (noScale < 0.15) noScale = 0.15;
     noBtn.style.transform = `scale(${noScale})`;
+
+    updateSpacing();
+
+    // FINAL REMOVAL
+    if (clickCount >= messages.length) {
+        dramaticSound.play();
+        setTimeout(() => {
+            laughSound.play();
+        }, 1500);
+
+        noBtn.style.transition = "all 0.5s ease";
+        noBtn.style.transform = "scale(0)";
+        setTimeout(() => {
+            noBtn.remove();
+        }, 500);
+    }
 });
 
-// YES button action
+// YES button wins
 yesBtn.addEventListener("click", () => {
-    document.body.innerHTML = `
-        <div style="
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #ff4e88, #ff9ecb);
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: center;
-        ">
-            <h1 style="
-                color: white;
-                font-size: 60px;
-                animation: pop 0.4s ease;
-            ">
-                You have great taste in men 😉❤️
-            </h1>
+    // Remove buttons and old heading
+    const mainBox = document.getElementById("mainBox");
+    mainBox.innerHTML = `
+        <div class="final-screen">
+            <h1 id="finalMessage">You have great taste in men 😉❤️</h1>
         </div>
     `;
+
+    // Make the final-screen take full viewport
+    mainBox.style.width = "100%";
+    mainBox.style.height = "100vh";
+    mainBox.style.display = "flex";
+    mainBox.style.justifyContent = "center";
+    mainBox.style.alignItems = "center";
+    mainBox.style.background = "transparent"; // don't override body gradient
+    mainBox.style.boxShadow = "none";
+    mainBox.style.borderRadius = "0";
+    mainBox.style.padding = "0";
+
+    startHeartRain();
 });
+
+
+// HEART RAIN FUNCTION
+function startHeartRain() {
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.textContent = "❤️";
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+        heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 5000);
+
+    }, 200);
+}

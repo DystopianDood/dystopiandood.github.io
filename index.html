@@ -3,12 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Be My Valentine ❤️</title>
+
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Beau+Rivage&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playwright+NZ+Basic:wght@100..400&display=swap" rel="stylesheet">
+
+    <!-- Your CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Sounds -->
+    <audio id="dramaticSound" src="dramatic.mp3"></audio>
+    <audio id="laughSound" src="villain-laugh.mp3"></audio>
 </head>
 <body>
-
     <div id="mainBox" class="box">
-        <h1>Do you want to be my valentine?</h1>
+        <h1 id="heading">Do you want to be my valentine?</h1>
         <div class="buttons">
             <button id="yesBtn">Yes ❤️</button>
             <button id="noBtn">No 💔</button>
