@@ -20,8 +20,6 @@ body {
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-    position: relative;
-    transition: all 0.5s ease;
 }
 
 h1 {
@@ -42,7 +40,6 @@ button {
     border: none;
     cursor: pointer;
     transition: transform 0.2s ease, background 0.3s ease;
-    position: relative;
 }
 
 #yesBtn {
@@ -58,7 +55,8 @@ button {
 #noBtn {
     background-color: #ff4d4d;
     color: white;
-    position: absolute;
+    transition: left 0.15s linear, top 0.15s linear;
+    position: relative; /* starts normally */
 }
 
 #noBtn:hover {
